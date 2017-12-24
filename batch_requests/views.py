@@ -34,7 +34,7 @@ def get_response(wsgi_request):
     try:
         resp = view(*args, **kwargs)
     except Exception as exc:
-        resp = HttpResponseServerError(content=exc.message)
+        resp = HttpResponseServerError(content=str(exc))
 
     headers = dict(resp._headers.values())
     # Convert HTTP response into simple dict type.
@@ -114,7 +114,7 @@ def handle_batch_requests(request, *args, **kwargs):
         # Get the Individual WSGI requests.
         wsgi_requests = get_wsgi_requests(request)
     except BadBatchRequest as brx:
-        return HttpResponseBadRequest(content=brx.message)
+        return HttpResponseBadRequest(content=str(brx))
 
     # Fire these WSGI requests, and collect the response for the same.
     response = execute_requests(wsgi_requests)
