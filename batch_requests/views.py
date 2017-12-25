@@ -9,6 +9,8 @@ import json
 from django.urls import resolve
 from django.http.response import HttpResponse, HttpResponseBadRequest,\
     HttpResponseServerError
+from django.http import JsonResponse
+
 from django.template.response import ContentNotRenderedError
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
@@ -119,8 +121,7 @@ def handle_batch_requests(request, *args, **kwargs):
     response = execute_requests(wsgi_requests)
 
     # Evrything's done, return the response.
-    resp = HttpResponse(
-        content=json.dumps(response), content_type="application/json")
+    resp = JsonResponse(response, safe=False)
 
     if _settings.ADD_DURATION_HEADER:
         resp.__setitem__(_settings.DURATION_HEADER_NAME, str((datetime.now() - batch_start_time).seconds))
