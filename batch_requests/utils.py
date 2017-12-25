@@ -5,6 +5,7 @@
 '''
 from django.test.client import RequestFactory, FakePayload
 from batch_requests.settings import br_settings as _settings
+import json
 
 
 class BatchRequestFactory(RequestFactory):
@@ -100,7 +101,7 @@ def get_wsgi_request_object(curr_request, method, url, headers, body):
 
     secure = _settings.USE_HTTPS
 
-    request = _request_provider(url, data=body, secure=secure,
+    request = _request_provider(url, data=json.dumps(body), secure=secure,
                                 content_type=content_type, **x_headers)
 
     return request
