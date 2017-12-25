@@ -38,13 +38,12 @@ def get_response(wsgi_request):
 
     headers = dict(resp._headers.values())
     # Convert HTTP response into simple dict type.
-    d_resp = {"status_code": resp.status_code, "reason_phrase": resp.reason_phrase,
-              "headers": headers}
-    try:
-        d_resp.update({"body": resp.content})
-    except ContentNotRenderedError:
-        resp.render()
-        d_resp.update({"body": resp.content})
+    d_resp = {
+        "status_code": resp.status_code,
+        "reason_phrase": resp.reason_phrase,
+        "headers": headers,
+        "body": json.loads(resp.rendered_content)
+    }
 
     # Check if we need to send across the duration header.
     if _settings.ADD_DURATION_HEADER:
